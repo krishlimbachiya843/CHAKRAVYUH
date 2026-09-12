@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHAKRAVYUH | The Trap That Never Releases</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* =========================================================
+           CHAKRAVYUH - Kurukshetra Fire Theme
+           ========================================================= */
+
+        :root {
+            --bg-primary:       #0a0400;
+            --bg-card:          rgba(20, 8, 0, 0.85);
+            --primary:          #ff6600;
+            --primary-glow:     rgba(255, 102, 0, 0.6);
+            --gold:             #ffcc00;
+            --gold-glow:        rgba(255, 204, 0, 0.6);
+            --danger:           #ff2244;
+            --danger-glow:      rgba(255, 34, 68, 0.6);
+            --success:          #00ff88;
+            --text-muted:       #ffaa44;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-primary);
+            background-image:
+                linear-gradient(rgba(255, 102, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 102, 0, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: var(--primary);
+            font-family: 'Share Tech Mono', 'Courier New', monospace;
+            padding: 20px;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Scanline overlay for CRT effect */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(255, 102, 0, 0.03),
+                rgba(255, 102, 0, 0.03) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        /* Subtle background pulse */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(255, 102, 0, 0.05) 0%,
+                transparent 60%
+            );
+            pointer-events: none;
+            z-index: 0;
+            animation: bgPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 0.4; }
+            50%      { opacity: 0.9; }
+        }
+
+        /* ---------------------------------------------------------
+           Header with flicker + glow
+           --------------------------------------------------------- */
+        .header {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid rgba(255, 102, 0, 0.3);
+            background: rgba(10, 4, 0, 0.6);
+            border-radius: 4px;
+        }
+
+        .header::before,
+        .header::after {
+            content: "";
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        .header::before {
+            top: -2px; left: -2px;
+            border-right: none; border-bottom: none;
+        }
+
+        .header::after {
+            bottom: -2px; right: -2px;
+            border-left: none; border-top: none;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 52px;
+            letter-spacing: 14px;
+            text-shadow:
+                0 0 5px var(--primary),
+                0 0 10px var(--primary),
+                0 0 20px var(--primary),
+                0 0 40px var(--gold),
+                0 0 60px var(--primary);
+            margin-bottom: 12px;
+            font-weight: bold;
+            animation: titleFlicker 4s infinite;
+        }
+
+        @keyframes titleFlicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                opacity: 1;
+                text-shadow:
+                    0 0 5px var(--primary),
+                    0 0 10px var(--primary),
+                    0 0 20px var(--primary),
+                    0 0 40px var(--gold),
+                    0 0 60px var(--primary);
+            }
+            20%, 24%, 55% {
+                opacity: 0.6;
+                text-shadow: none;
+            }
+        }
+
+        .tagline {
+            color: var(--gold);
+            font-size: 14px;
+            letter-spacing: 8px;
+            opacity: 0.85;
+            text-shadow: 0 0 8px var(--gold);
+        }
+
+        .tagline::before { content: "// "; opacity: 0.5; }
+        .tagline::after  { content: " //"; opacity: 0.5; }
+
+        /* ---------------------------------------------------------
+           Statistics Cards
+           --------------------------------------------------------- */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-card {
+            border: 1px solid rgba(255, 102, 0, 0.4);
+            background: var(--bg-card);
+            padding: 20px;
+            text-align: center;
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(255, 102, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 0 25px rgba(255, 102, 0, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .stat-value {
+            font-size: 42px;
+            color: var(--primary);
+            text-shadow: 0 0 15px var(--primary-glow);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            animation: numberGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes numberGlow {
+            0%, 100% { text-shadow: 0 0 10px var(--primary-glow); }
+            50%      { text-shadow: 0 0 25px var(--primary), 0 0 40px var(--gold); }
+        }
+
+        .stat-label {
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            opacity: 0.9;
+        }
+
+        /* ---------------------------------------------------------
+           Honeypot Control Cards
+           --------------------------------------------------------- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
+            position: relative;
+            border: 1px solid rgba(255, 102, 0, 0.4);
+            border-radius: 4px;
+            padding: 25px;
+            background: var(--bg-card);
+            box-shadow:
+                0 0 15px rgba(255, 102, 0, 0.15),
+                inset 0 0 30px rgba(255, 102, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow:
+                0 0 30px rgba(255, 102, 0, 0.4),
+                inset 0 0 40px rgba(255, 102, 0, 0.08);
+        }
+
+        .card::before,
+        .card::after {
+            content: "";
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 8px var(--primary);
+        }
+
+        .card::before {
+            top: -2px; left: -2px;
+            border-right: none; border-bottom: none;
+        }
+
+        .card::after {
+            bottom: -2px; right: -2px;
+            border-left: none; border-top: none;
+        }
+
+        .card h2 {
+            margin-bottom: 18px;
+            font-size: 18px;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .card h2 .sub {
+            display: block;
+            font-size: 11px;
+            color: var(--primary);
+            opacity: 0.7;
+            letter-spacing: 3px;
+            margin-top: 4px;
+            text-shadow: none;
+        }
+
+        /* ---------------------------------------------------------
+           Buttons
+           --------------------------------------------------------- */
+        .btn {
+            padding: 10px 22px;
+            margin-right: 10px;
+            margin-bottom: 15px;
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            font-family: inherit;
+            font-size: 13px;
+            cursor: pointer;
+            letter-spacing: 3px;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-shadow: 0 0 5px var(--primary);
+            box-shadow: 0 0 8px rgba(255, 102, 0, 0.3);
+        }
+
+        .btn:hover {
+            background: var(--primary);
+            color: var(--bg-primary);
+            box-shadow: 0 0 30px var(--primary);
+            text-shadow: none;
+            animation: btnPulse 0.6s ease-out;
+        }
+
+        @keyframes btnPulse {
+            0%   { box-shadow: 0 0 8px var(--primary); }
+            50%  { box-shadow: 0 0 40px var(--primary), 0 0 80px var(--gold); }
+            100% { box-shadow: 0 0 30px var(--primary); }
+        }
+
+        .btn.stop {
+            border-color: var(--danger);
+            color: var(--danger);
+            text-shadow: 0 0 5px var(--danger);
+            box-shadow: 0 0 8px rgba(255, 34, 68, 0.3);
+        }
+
+        .btn.stop:hover {
+            background: var(--danger);
+            color: var(--bg-primary);
+            box-shadow: 0 0 30px var(--danger);
+        }
+
+        /* ---------------------------------------------------------
+           Inputs and Selects
+           --------------------------------------------------------- */
+        label {
+            display: block;
+            margin: 12px 0 6px;
+            font-size: 11px;
+            opacity: 0.85;
+            letter-spacing: 2px;
+            color: var(--gold);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 102, 0, 0.5);
+            color: var(--primary);
+            font-family: inherit;
+            font-size: 14px;
+            border-radius: 3px;
+            letter-spacing: 1px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(255, 102, 0, 0.5);
+            animation: inputFlash 0.4s ease-out;
+        }
+
+        @keyframes inputFlash {
+            0%   { box-shadow: 0 0 0 rgba(255, 102, 0, 0.8); }
+            100% { box-shadow: 0 0 15px rgba(255, 102, 0, 0.5); }
+        }
+
+        /* ---------------------------------------------------------
+           Attack Logs Panel
+           --------------------------------------------------------- */
+        .logs-box {
+            position: relative;
+            border: 1px solid rgba(255, 102, 0, 0.4);
+            border-radius: 4px;
+            padding: 25px;
+            background: var(--bg-card);
+            box-shadow:
+                0 0 20px rgba(255, 102, 0, 0.2),
+                inset 0 0 40px rgba(255, 102, 0, 0.05);
+            min-height: 320px;
+            max-height: 520px;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        .logs-box::before,
+        .logs-box::after {
+            content: "";
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        .logs-box::before {
+            top: -2px; left: -2px;
+            border-right: none; border-bottom: none;
+        }
+
+        .logs-box::after {
+            bottom: -2px; right: -2px;
+            border-left: none; border-top: none;
+        }
+
+        .logs-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: 10px;
+            font-size: 22px;
+            color: var(--gold);
+            text-shadow:
+                0 0 10px var(--gold),
+                0 0 20px var(--primary);
+            animation: titleFlicker 6s infinite;
+        }
+
+        .log-line {
+            padding: 10px 8px;
+            border-bottom: 1px solid rgba(255, 102, 0, 0.15);
+            font-size: 13px;
+            word-break: break-all;
+            transition: background 0.2s;
+            animation: logEntry 0.5s ease-out;
+        }
+
+        @keyframes logEntry {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+                background: rgba(255, 102, 0, 0.15);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+                background: transparent;
+            }
+        }
+
+        .log-line:hover {
+            background: rgba(255, 102, 0, 0.05);
+        }
+
+        .log-line .ip      { color: var(--gold); text-shadow: 0 0 5px var(--gold); }
+        .log-line .proto   { color: var(--success); text-shadow: 0 0 5px var(--success); }
+        .log-line .user    { color: #ff6688; text-shadow: 0 0 5px #ff6688; }
+        .log-line .country { color: #88ddff; font-size: 11px; }
+
+        .pattern-badge {
+            margin-top: 6px;
+            padding: 6px 10px;
+            border-left: 3px solid var(--primary);
+            background: rgba(0, 0, 0, 0.4);
+            font-size: 12px;
+            border-radius: 2px;
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { background: rgba(0, 0, 0, 0.4); }
+            50%      { background: rgba(255, 102, 0, 0.1); }
+        }
+
+        /* ---------------------------------------------------------
+           Footer
+           --------------------------------------------------------- */
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 102, 0, 0.2);
+            opacity: 0.75;
+            font-size: 12px;
+            letter-spacing: 4px;
+            color: var(--primary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success), 0 0 20px var(--success);
+            margin-right: 8px;
+            animation: dotPulse 1.5s infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 10px var(--success), 0 0 20px var(--success);
+            }
+            50% {
+                opacity: 0.4;
+                box-shadow: 0 0 5px var(--success);
+            }
+        }
+
+        /* ---------------------------------------------------------
+           Scrollbar
+           --------------------------------------------------------- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 102, 0, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <!-- ============ HEADER ============ -->
+    <div class="header">
+        <h1>⚔ CHAKRAVYUH ⚔</h1>
+        <p class="tagline">THE TRAP THAT NEVER RELEASES</p>
+    </div>
+
+    <!-- ============ STATISTICS ============ -->
+    <div class="stats">
+        <div class="stat-card">
+            <span class="stat-value" id="stat-total">0</span>
+            <span class="stat-label">TOTAL ATTACKS</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" id="stat-http">0</span>
+            <span class="stat-label">HTTP ATTACKS</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" id="stat-ftp">0</span>
+            <span class="stat-label">FTP ATTACKS</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" id="stat-ssh">0</span>
+            <span class="stat-label">SSH ATTACKS</span>
+        </div>
+    </div>
+
+    <!-- ============ HONEYPOT CONTROL CARDS ============ -->
+    <div class="grid">
+        <div class="card">
+            <h2>🌐 HTTP-DWAR
+                <span class="sub">// WEB GATEWAY TRAP</span>
+            </h2>
+            <button class="btn" onclick="startSvc('http')">START</button>
+            <button class="btn stop" onclick="stopSvc('http')">STOP</button>
+            <label>Port Number</label>
+            <input id="http-port" value="8080">
+            <label>Server Banner</label>
+            <select id="http-banner">
+                <option>Apache/2.4.41 (Ubuntu)</option>
+                <option>nginx/1.18.0</option>
+                <option>Microsoft-IIS/10.0</option>
+            </select>
+        </div>
+
+        <div class="card">
+            <h2>📁 FTP-KOSH
+                <span class="sub">// FILE VAULT TRAP</span>
+            </h2>
+            <button class="btn" onclick="startSvc('ftp')">START</button>
+            <button class="btn stop" onclick="stopSvc('ftp')">STOP</button>
+            <label>Port Number</label>
+            <input id="ftp-port" value="2121">
+            <label>Server Banner</label>
+            <select id="ftp-banner">
+                <option>vsFTPd 3.0.3</option>
+                <option>vsFTPd 2.3.4</option>
+                <option>ProFTPD 1.3.5</option>
+            </select>
+        </div>
+
+        <div class="card">
+            <h2>🔐 SSH-DURG
+                <span class="sub">// FORTRESS TRAP</span>
+            </h2>
+            <button class="btn" onclick="startSvc('ssh')">START</button>
+            <button class="btn stop" onclick="stopSvc('ssh')">STOP</button>
+            <label>Port Number</label>
+            <input id="ssh-port" value="2222">
+            <label>Server Banner</label>
+            <select id="ssh-banner">
+                <option>OpenSSH 8.2p1 Ubuntu</option>
+                <option>OpenSSH 7.4</option>
+                <option>OpenSSH 5.3</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- ============ ATTACK LOGS ============ -->
+    <div class="logs-box">
+        <h2>[ CHAKRAVYUH LOGS ]</h2>
+        <div id="logs">
+            <div class="log-line">⏳ Waiting for attackers to enter the trap...</div>
+        </div>
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <div class="footer">
+        <span class="status-dot"></span> SYSTEM ACTIVE | CHAKRAVYUH v2.0
+    </div>
+
+    <!-- ============ JAVASCRIPT ============ -->
+    <script>
+        /**
+         * Start a honeypot service via the backend API.
+         */
+        async function startSvc(protocol) {
+            const port = document.getElementById(protocol + '-port').value;
+            const banner = document.getElementById(protocol + '-banner').value;
+            const res = await fetch('/api/start', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    protocol: protocol, port: port, banner: banner
+                })
+            });
+            const data = await res.json();
+            alert('⚔ ' + data.message);
+            refreshStats();
+        }
+
+        /**
+         * Stop a running honeypot service.
+         */
+        async function stopSvc(protocol) {
+            const res = await fetch('/api/stop', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({protocol: protocol})
+            });
+            const data = await res.json();
+            alert('⚔ ' + data.message);
+            refreshStats();
+        }
+
+        /**
+         * Refresh the attack log panel.
+         */
+        async function refreshLogs() {
+            try {
+                const res = await fetch('/api/logs');
+                const logs = await res.json();
+                const box = document.getElementById('logs');
+
+                if (logs.length === 0) {
+                    box.innerHTML =
+                        '<div class="log-line">⏳ Waiting for attackers to enter the trap...</div>';
+                    return;
+                }
+
+                let html = '';
+                for (const l of logs) {
+                    let patternBadge = '';
+                    if (l.pattern_type && l.pattern_type !== 'Unknown Activity') {
+                        const sevColor = {
+                            'LOW': '#00ff88',
+                            'MEDIUM': '#ffcc00',
+                            'HIGH': '#ff6600',
+                            'CRITICAL': '#ff2244'
+                        }[l.pattern_severity] || '#ff6600';
+
+                        patternBadge = `
+                            <div class="pattern-badge" style="border-left-color:${sevColor};">
+                                🧠 <b style="color:${sevColor}">[${l.pattern_severity}]</b>
+                                <b>${l.pattern_type}</b>
+                                ${l.pattern_tool && l.pattern_tool !== 'Unknown' ?
+                                  ` | Tool: <b style="color:#ffcc00">${l.pattern_tool}</b>` : ''}
+                            </div>`;
+                    }
+
+                    html += `
+                        <div class="log-line">
+                            [${l.timestamp}]
+                            <span class="ip">${l.src_ip}:${l.src_port}</span>
+                            ${l.geo_country ?
+                              `<span class="country">[${l.geo_country}]</span>` : ''}
+                            →
+                            <span class="proto">${l.protocol}:${l.port}</span>
+                            ${l.username ?
+                              `<span class="user">user=${l.username} pass=${l.password}</span>` : ''}
+                            | ${l.event_type}
+                            ${patternBadge}
+                        </div>`;
+                }
+                box.innerHTML = html;
+            } catch (err) {
+                console.error('Log refresh failed:', err);
+            }
+        }
+
+        /**
+         * Refresh the statistics cards.
+         */
+        async function refreshStats() {
+            try {
+                const res = await fetch('/api/stats');
+                const stats = await res.json();
+                animateNumber('stat-total', stats.total);
+                animateNumber('stat-http', stats.http);
+                animateNumber('stat-ftp', stats.ftp);
+                animateNumber('stat-ssh', stats.ssh);
+            } catch (err) {
+                console.error('Stats refresh failed:', err);
+            }
+        }
+
+        /**
+         * Animate a numeric counter to its target value.
+         */
+        function animateNumber(elementId, target) {
+            const el = document.getElementById(elementId);
+            const current = parseInt(el.innerText) || 0;
+            if (current === target) return;
+            const step = target > current ? 1 : -1;
+            const interval = setInterval(() => {
+                let val = parseInt(el.innerText) || 0;
+                val += step;
+                el.innerText = val;
+                if (val === target) clearInterval(interval);
+            }, 40);
+        }
+
+        // Poll backend every 3 seconds
+        setInterval(() => {
+            refreshLogs();
+            refreshStats();
+        }, 3000);
+
+        refreshLogs();
+        refreshStats();
+    </script>
+</body>
+</html>
